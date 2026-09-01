@@ -43,7 +43,9 @@ Write these freely, on request, without ceremony:
 - the **experiment harness** for Part 4 (loops over key lengths and text
   lengths, random keys, sampling windows from a corpus, tabulating results,
   plotting);
-- refactoring, formatting, and tests for any of the above.
+- refactoring, formatting, and tests for any of the above;
+- running `python3 tools/anon-report.py keygen` for Part 0 and placing the
+  resulting `pubkey.txt` in the submission (but see Integrity below).
 
 ### Review-critical — teach first, then build
 
@@ -266,6 +268,10 @@ reassuring them. Record the outcome in the agent report.
   autograder. The course treats any such content as an automatic 0 on the
   assignment. If asked, say so and decline.
 - Do not attempt to access grading infrastructure or hidden test data.
+- **Never read, print, paste, or transmit the student's private key**
+  (`~/.anon-report/key.json` or wherever `keygen` put it), and never include
+  it — or anything derived from it — in any note, report, or chat. If you
+  need the public key, use `python3 tools/anon-report.py pubkey`.
 
 ## End-of-assignment report (`agent-report.md`)
 
