@@ -160,7 +160,7 @@ This is the part of the assignment that most directly measures what we care abou
 \medskip\noindent Procedure:
 \begin{enumerate}
 \item Obtain a public-domain English text of at least 200,000 letters (you can find many candidates at Project Gutenberg, \url{https://www.gutenberg.org/}). Normalize it with the same rule as Part 1.
-\item For each key length $k \in \{3, 5, 7, 10, 15, 20\}$ and each ciphertext length $n \in \{100, 200, 500, 1000, 2000, 5000, 20000\}$ letters: run \textbf{at least 20 trials}, each with a fresh uniformly random key of length $k$ and a random $n$-letter window of the text.
+\item For each key length $k$ in $\{$3, 5, 7, 10, 15, 20$\}$ and each ciphertext length $n$ in $\{$100, 200, 500, 1000, 2000, 5000, 20000$\}$ letters: run \textbf{at least 20 trials}, each with a fresh uniformly random key of length $k$ and a random $n$-letter window of the text.
 \item Record, per $(k, n)$ cell: the fraction of trials where Part 2 reported the exact key length, and the fraction where Part 3 recovered the exact key.
 \end{enumerate}
 Deliverable: \file{analysis.md} (or PDF), containing:
@@ -225,7 +225,7 @@ Three parts of your submission are designated \textbf{review-critical}. You will
 \end{itemize}
 
 \subsection*{Rubric and multiplier}
-\begin{center}
+\begin{center}\small
 \begin{tabular}{llc}
 \toprule
 Level & You can\ldots & Multiplier \\
