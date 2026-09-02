@@ -55,7 +55,7 @@ SCHEME  Linkable ring signature (Liu-Wei-Wong LSAG) in the 2048-bit MODP
 Your private key is yours alone. Never paste it into any note, report, chat,
 or submission. Back it up; you need it all semester.
 """
-import argparse, base64, hashlib, hmac, json, os, secrets, sys
+import argparse, base64, hashlib, hmac, json, os, re, secrets, sys, tempfile
 from pathlib import Path
 from collections import namedtuple
 
@@ -77,6 +77,7 @@ RECEIPTS = KEYDIR / "receipts"
 FIXED_SIZE = 16384                 # every ciphertext is exactly this long
 MAX_PLAINTEXT = FIXED_SIZE - 8     # 8-byte length prefix
 MIN_TAGS = 20                      # anonymity-set floor for attendance proofs
+ASSIGNMENT_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,15}$")
 
 # ----------------------------------------------------------------- encoding --
 def enc(v: int) -> str:
@@ -141,6 +142,35 @@ def read_json(path, what="file"):
         sys.exit(f"{what} {path} is not a JSON object")
     return d
 
+def assignment_ok(value) -> bool:
+    """Assignment ids become directory/file names, so validate them once here."""
+    return isinstance(value, str) and bool(ASSIGNMENT_RE.fullmatch(value))
+
+def require_assignment(value):
+    if not assignment_ok(value):
+        sys.exit("assignment id must be 1..16 letters, digits, underscores, or hyphens")
+
+def private_dir(path: Path):
+    """Create (or repair) a directory that may contain an identity-linking secret."""
+    path.mkdir(parents=True, exist_ok=True)
+    path.chmod(0o700)
+
+def write_private_json(path: Path, obj):
+    """Write a private JSON file without following a pre-existing symlink."""
+    flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        fd = os.open(path, flags, 0o600)
+    except OSError as e:
+        sys.exit(f"cannot write private file {path}: {e}")
+    try:
+        os.fchmod(fd, 0o600)
+        with os.fdopen(fd, "w") as f:
+            fd = -1
+            json.dump(obj, f, indent=1)
+    finally:
+        if fd >= 0:
+            os.close(fd)
+
 # --------------------------------------------------------------------- keys --
 def load_key() -> int:
     if not KEYFILE.exists():
@@ -160,12 +190,12 @@ def parse_pk_line(line: str) -> int:
     return dec(parts[1])
 
 def cmd_keygen(a):
+    private_dir(KEYDIR)
     if KEYFILE.exists():
         print(f"a key already exists at {KEYFILE}; not overwriting it.")
         print("(delete it only if you have never registered its public key.)")
         return cmd_pubkey(a)
     x = rand_scalar(); y = pow(G, x, P)
-    KEYDIR.mkdir(parents=True, exist_ok=True)
     fd = os.open(KEYFILE, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(fd, "w") as f:
         json.dump({"scheme": SCHEME, "x": f"{x:X}"}, f)
@@ -294,6 +324,10 @@ def sig_dict(version, rhash, assignment, msg, c0, s, tag) -> dict:
 def check_sig(sig: dict, r: Roster, assignment, msg):
     """Full check of a signature dict against roster r. Returns (ok, reason)."""
     try:
+        if sig.get("scheme") != SCHEME:
+            return False, "signature has the wrong or missing scheme"
+        if not assignment_ok(assignment):
+            return False, "bad assignment id"
         if sig.get("roster_hash") != r.hash or sig.get("roster_version") != r.version:
             return False, "signature was made over a different roster"
         if sig.get("assignment") != assignment:
@@ -407,22 +441,24 @@ def load_course_secret(path, r: Roster) -> int:
     return k
 
 # --------------------------------------------------------- deposit (Tor) --
-import re
 ONION_RE = re.compile(r"^[a-z2-7]{56}\.onion$")
 
-def onion_url_ok(url) -> bool:
+def onion_url_ok(url, expected_path="/deposit") -> bool:
     from urllib.parse import urlsplit
     try:
         u = urlsplit(url)
+        port = u.port
     except ValueError:
         return False
-    return u.scheme == "http" and bool(u.hostname) and bool(ONION_RE.match(u.hostname)) and u.path == "/deposit"
+    return (u.scheme == "http" and bool(u.hostname) and bool(ONION_RE.fullmatch(u.hostname))
+            and u.path == expected_path and port in (None, 80)
+            and u.username is None and u.password is None and not u.query and not u.fragment)
 
 def socks5_connect(proxy, host, port, timeout=90):
     """Minimal SOCKS5 CONNECT with remote (Tor-side) name resolution, so
-    .onion addresses never touch the local resolver. Offers username/password
+    .onion addresses never touch the local resolver. Requires username/password
     auth with random credentials: Tor uses them purely for stream isolation,
-    so this deposit gets a circuit shared with no other local Tor traffic."""
+    so this request gets a circuit shared with no other local Tor traffic."""
     import socket
     phost, pport = proxy
     hb = host.encode()
@@ -436,15 +472,14 @@ def socks5_connect(proxy, host, port, timeout=90):
             if not chunk: raise ConnectionError("SOCKS proxy closed the connection")
             buf += chunk
         return buf
-    s.sendall(b"\x05\x02\x00\x02")                       # methods: none, username/password
+    s.sendall(b"\x05\x01\x02")                           # require username/password isolation
     ver, method = rd(2)
-    if ver != 5 or method not in (0, 2):
-        raise ConnectionError("SOCKS5 handshake failed")
-    if method == 2:
-        u, pw = secrets.token_hex(8).encode(), secrets.token_hex(8).encode()
-        s.sendall(b"\x01" + bytes([len(u)]) + u + bytes([len(pw)]) + pw)
-        if rd(2)[1] != 0:
-            raise ConnectionError("SOCKS5 isolation auth refused")
+    if ver != 5 or method != 2:
+        raise ConnectionError("SOCKS5 proxy refused stream-isolation credentials")
+    u, pw = secrets.token_hex(8).encode(), secrets.token_hex(8).encode()
+    s.sendall(b"\x01" + bytes([len(u)]) + u + bytes([len(pw)]) + pw)
+    if rd(2)[1] != 0:
+        raise ConnectionError("SOCKS5 isolation auth refused")
     s.sendall(b"\x05\x01\x00\x03" + bytes([len(hb)]) + hb + port.to_bytes(2, "big"))
     ver, rep, _, atyp = rd(4)
     if rep != 0:
@@ -461,7 +496,7 @@ def http_post_json(url, obj, direct=False, socks=None):
     u = urlsplit(url); host, port, path = u.hostname, u.port or 80, u.path or "/"
     if u.scheme != "http" or not host:
         sys.exit("the drop box URL is plain http://<address>.onion/deposit (the .onion name is the authentication)")
-    if not direct and not onion_url_ok(url):
+    if not direct and not (onion_url_ok(url) or onion_url_ok(url, "/challenge")):
         sys.exit("refusing: the drop box address must be a 56-character v3 .onion address (http://....onion/deposit). "
                  "A different address would not be the course's box.")
     body = json.dumps(obj, separators=(",", ":")).encode()
@@ -493,7 +528,19 @@ def http_post_json(url, obj, direct=False, socks=None):
         return resp.status, {"error": data[:200].decode(errors="replace")}
 
 def do_upload(bundle, a):
-    status, r = http_post_json(a.url, bundle, direct=a.direct, socks=parse_socks(a.socks))
+    from urllib.parse import urlsplit, urlunsplit
+    digest = bundle_fingerprint(bundle)
+    u = urlsplit(a.url)
+    challenge_url = urlunsplit((u.scheme, u.netloc, "/challenge", "", ""))
+    request = {"bundle_sha256": digest, "roster_hash": bundle["roster_hash"],
+               "assignment": bundle["assignment"]}
+    status, challenge = http_post_json(challenge_url, request, direct=a.direct, socks=parse_socks(a.socks))
+    if status != 200:
+        sys.exit(f"REJECTED (HTTP {status}): {challenge.get('error', challenge)}\n"
+                 "the drop box could not issue its anti-abuse challenge; try again later")
+    proof = solve_pow(challenge)
+    wire_bundle = dict(bundle); wire_bundle["_pow"] = proof
+    status, r = http_post_json(a.url, wire_bundle, direct=a.direct, socks=parse_socks(a.socks))
     tag = bundle["sig"]["tag"]
     if status == 200 and r.get("status") == "accepted":
         print(f"ACCEPTED   tag {tag[:16]}...   the drop box has your report.")
@@ -525,10 +572,15 @@ def cmd_deposit(a):
               "sig": sig_dict(r.version, r.hash, a.assignment, msg, c0, s, tag)}
     if a.out:
         out = Path(a.out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        write_private_json(out, bundle)
     else:
-        RECEIPTS.mkdir(parents=True, exist_ok=True)
-        out = RECEIPTS / f"{a.assignment}-{enc(tag)[:16]}.json"
-    out.write_text(json.dumps(bundle, indent=1))
+        private_dir(KEYDIR); private_dir(RECEIPTS)
+        fd, name = tempfile.mkstemp(prefix=f"{a.assignment}-{enc(tag)[:16]}-", suffix=".json", dir=RECEIPTS)
+        out = Path(name)
+        with os.fdopen(fd, "w") as f:
+            os.fchmod(f.fileno(), 0o600)
+            json.dump(bundle, f, indent=1)
     print(f"receipt -> {out}   (encrypted to the course key; ring of {len(r.keys)}; tag {enc(tag)[:16]}...)")
     print("(the receipt contains your tag; keep it out of anything you submit under your name)")
     if a.no_upload:
@@ -562,6 +614,7 @@ def verify_bundle(b: dict, r: Roster):
             return False, "bundle is over a different roster"
         for k in ("assignment", "kem", "ciphertext", "mac"):
             if not isinstance(b.get(k), str): return False, f"missing {k}"
+        if not assignment_ok(b["assignment"]): return False, "bad assignment id"
         if len(b["ciphertext"]) != CT_B64_LEN or len(base64.b64decode(b["ciphertext"], validate=True)) != FIXED_SIZE:
             return False, "ciphertext is not the fixed size"
         if len(b["mac"]) != 64: return False, "bad mac"
@@ -576,6 +629,36 @@ def verify_bundle(b: dict, r: Roster):
 def canonical_bundle(b: dict) -> dict:
     """Whitelisted copy: nothing but the known fields gets stored/published."""
     return {**{k: b[k] for k in BUNDLE_FIELDS if k != "sig"}, "sig": {k: b["sig"][k] for k in SIG_FIELDS}}
+
+def bundle_fingerprint(b: dict) -> str:
+    """Stable digest bound into the server's one-use proof-of-work challenge."""
+    c = canonical_bundle(b)
+    return hashlib.sha256(json.dumps(c, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+def _leading_zero_bits(value: bytes, bits: int) -> bool:
+    whole, rem = divmod(bits, 8)
+    return value[:whole] == b"\0" * whole and (not rem or value[whole] >> (8 - rem) == 0)
+
+def solve_pow(challenge: dict) -> dict:
+    """Solve a short, server-issued Hashcash puzzle before expensive LSAG verification."""
+    try:
+        if challenge.get("scheme") != "anon-report-pow-v1": raise ValueError("wrong scheme")
+        token, nonce = challenge["token"], challenge["nonce"]
+        expires, bits = challenge["expires"], challenge["bits"]
+        if (not isinstance(token, str) or len(token) != 64 or
+                not isinstance(nonce, str) or len(nonce) != 32):
+            raise ValueError("bad token")
+        bytes.fromhex(token); bytes.fromhex(nonce)
+        if not isinstance(expires, int) or not isinstance(bits, int) or not (0 <= bits <= 24):
+            raise ValueError("bad parameters")
+    except (KeyError, TypeError, ValueError) as e:
+        sys.exit(f"drop box sent a malformed anti-abuse challenge ({e})")
+    prefix = b"anon-report-pow-v1\0" + bytes.fromhex(token)
+    for counter in range(1 << 64):
+        if _leading_zero_bits(hashlib.sha256(prefix + counter.to_bytes(8, "big")).digest(), bits):
+            return {"scheme": "anon-report-pow-v1", "token": token, "nonce": nonce,
+                    "expires": expires, "bits": bits, "counter": f"{counter:X}"}
+    raise AssertionError("proof-of-work counter space exhausted")
 
 def cmd_verify_bundle(a):
     ok, why = verify_bundle(read_json(a.bundle, "bundle"), load_roster(a.roster))
@@ -634,6 +717,7 @@ def cmd_tags(a):
 
 # --------------------------------------------------------- attendance proof --
 def load_tags(path, r: Roster, assignment):
+    require_assignment(assignment)
     t = read_json(path, "tags")
     if t.get("roster_hash") != r.hash or t.get("assignment") != assignment:
         sys.exit("tags file is for a different roster/assignment")
@@ -732,8 +816,14 @@ def cmd_selftest(a):
         except ValueError: pass
     try: scalar("F" * 513); raise AssertionError("oversized scalar accepted")
     except ValueError: pass
+    onion = "a" * 56 + ".onion"
+    assert onion_url_ok(f"http://{onion}/deposit") and onion_url_ok(f"http://{onion}:80/deposit")
+    assert not onion_url_ok(f"http://user@{onion}/deposit")
+    assert not onion_url_ok(f"http://{onion}:4444/deposit")
+    assert not onion_url_ok(f"http://{onion}/deposit?x=1") and not onion_url_ok(f"http://{onion}/deposit#x")
+    assert assignment_ok("A1") and not assignment_ok("../../A1")
     print("selftest ok: group params, sign/verify, non-malleability, linkability, per-assignment tags, "
-          "encrypt/decrypt + tamper/re-sign detection, scalar bounds")
+          "encrypt/decrypt + tamper/re-sign detection, scalar bounds, strict URLs/assignment ids")
 
 # --------------------------------------------------------------------- main --
 def main(argv=None):
@@ -771,6 +861,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if not a.cmd:
         ap.print_help(); return
+    if hasattr(a, "assignment") and a.assignment is not None:
+        require_assignment(a.assignment)
     {"keygen": cmd_keygen, "pubkey": cmd_pubkey, "selftest": cmd_selftest, "sign": cmd_sign,
      "verify": cmd_verify, "attend": cmd_attend, "verify-attend": cmd_verify_attend,
      "roster": cmd_roster, "tags": cmd_tags, "deposit": cmd_deposit, "upload": cmd_upload,

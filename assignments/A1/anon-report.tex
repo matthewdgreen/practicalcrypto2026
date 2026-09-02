@@ -1,0 +1,190 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx,url,xspace,amsmath,amsfonts,booktabs,enumitem}
+\usepackage[hidelinks]{hyperref}
+\setlength{\oddsidemargin}{.25in}
+\setlength{\evensidemargin}{.25in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.4in}
+\setlength{\textheight}{8.5in}
+\setlist{nosep}
+
+\def\subjnum{601.445/601.645}
+\def\subjname{Practical Cryptographic Systems}
+
+%
+% Impressive box to go at the top of the first page
+%
+\newcommand{\handout}[5]{
+  \renewcommand{\thepage}{#1-\arabic{page}}
+  \noindent
+  \begin{center}
+    \framebox{
+      \vbox{
+        \hbox to 5.78in { {\bf \subjnum: \subjname} \hfill #2 }
+        \vspace{4mm}
+        \hbox to 5.78in { {\Large \hfill #5  \hfill} }
+        \vspace{2mm}
+        \hbox to 5.78in { {\it #3 \hfill #4} }
+        }
+      }
+  \end{center}
+  \vspace*{4mm}
+  }
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{#1}}
+
+\emergencystretch=1.5em
+\begin{document}
+\handout{Anon Report}{September 2, 2026}{Instructor: Matthew Green}{Applies to Assignments 1, 2, and 3}{Submitting Your Anonymous Agent Report}
+
+\noindent
+This handout explains how to turn in the \emph{agent report}. This is the short, anonymous
+write-up your coding agent produces about how well its teaching instructions worked. The tool,
+\file{tools/anon-report.py}, is one file of plain Python with no dependencies; you can
+run every step yourself, or let your agent do it (\file{AGENTS.md} contains these instructions as well.)
+
+\section*{What it is, and why it works this way}
+
+The report is feedback on the \emph{instructions} not on your performance. It tells us what the agent did
+versus what you did, where the ``explain first'' rule helped or got in the way, and
+what it would change. This file is not graded. We want it to be candid, so it's anonymous ---
+and rather than ask you to trust our promise on that, the system uses cryptography so that we can't
+link a report to a student. If you're interested, here's what it offers:
+
+\medskip \noindent
+\begin{itemize}
+\item \textbf{Encryption.} Your report is encrypted on your own machine to the course
+  public key. The drop box and the public bulletin board hold only ciphertext, and only the
+  instructor's offline key can decrypt it.
+\item \textbf{A ring signature.} Each report is signed with a \emph{linkable ring
+  signature} over the roster of registered student keys (your Part 0 key). It proves
+  ``an enrolled student wrote this'' without saying which one, and it carries a tag
+  that makes a second deposit from the same key visible as a duplicate, but without
+  revealing the key. Tags differ per assignment, so your reports across the semester
+  are not linkable to each other either.
+\item \textbf{Tor.} The deposit travels over Tor to an onion service, so the box
+  never sees your IP address. The application keeps no per-request log and zeroes the
+  stored file's modification time; ordinary system metadata can still reflect when it arrived.
+\end{itemize}
+
+\medskip \noindent
+\noindent Later in the course you might implement this scheme yourself; it is the
+same math as the public-key block, used for a privacy-preserving and practical purpose.
+
+\section*{What it doesn't protect}
+
+Cryptography can offer only so much security. Filesystem or network records may
+reflect when you connect, and a distinctive writing style could narrow things down.
+We do not use that metadata to identify authors, but we will read the reports.
+The agent is instructed to write the report
+without names, JHED, email, file paths, verbatim code, or other identifying details,
+and to show it to you first. \textbf{Read the report before it is sent.} You're the
+last check: you can edit it, although we'd prefer you not remove any interesting content.
+
+\section*{Dates (Assignment 1)}
+
+\begin{center}\small
+\begin{tabular}{ll}
+\toprule
+Fri Sep 11 & Part 0: register your public key (Gradescope ``A1 Part 0'') \\
+Mon Sep 14 & Roster published: \file{anon-report/roster.json} appears in the course repository \\
+by Sun Sep 20 & Deposit your report \\
+$\approx$ Mon Sep 21 & Tags snapshot published: \file{anon-report/tags-A1.json} \\
+by Fri Sep 25 & Attendance proof (Gradescope ``A1 attendance'') \\
+\bottomrule
+\end{tabular}
+\end{center}
+For Assignment 1 the channel is a \textbf{pilot}: the attendance proof is not required
+for review-lab sign-up. From Assignment 2 on, it will be.
+
+\section*{Step by step}
+
+You can have your agent submit the report. Honestly, I would --- the process is a bit annoying. If you choose to do it yourself, all of the 
+instructions are below.  
+Every command below is run from your assignment directory, on the machine that holds
+your Part 0 key (\file{\textasciitilde/.anon-report/key.json}).
+
+\medskip \noindent
+\begin{enumerate}
+\item \textbf{Before you start.} Have \textbf{Tor Browser} open and connected (free,
+  \url{https://www.torproject.org}; the tool talks to it on port 9150 --- a running
+  \code{tor} daemon on 9050 also works). Pull the course repository so that
+  \file{anon-report/roster.json} exists --- it contains every registered key, the course
+  encryption key, and the drop box's onion address. If the file isn't there yet, the
+  channel isn't open.
+\item \textbf{Read your report.} Have it as a text file, e.g.\ \file{agent-report.md}.
+  Check it contains no name, JHED, email, paths, or code. This is the last moment it's
+  editable.
+\item \textbf{Deposit it} --- encrypts, signs, and uploads over Tor in one step:
+\begin{verbatim}
+  python3 tools/anon-report.py deposit agent-report.md \
+      --roster anon-report/roster.json \
+      --assignment A1
+\end{verbatim}
+  Success looks like \code{ACCEPTED   tag 3F9A...}. Note the tag: it's the name of
+  your entry on the public bulletin board. A receipt is saved under
+  \file{\textasciitilde/.anon-report/receipts/}.
+\item \textbf{If the upload fails} (typically ``Tor not connected''), don't re-run
+  \code{deposit}. Fix Tor --- on campus wifi, Tor Browser $\to$ Settings $\to$ Connection
+  $\to$ Bridges $\to$ Snowflake --- then re-send the saved receipt:
+\begin{verbatim}
+  python3 tools/anon-report.py upload \
+      ~/.anon-report/receipts/<newest file> \
+      --roster anon-report/roster.json
+\end{verbatim}
+\item \textbf{One shot.} The drop box keeps the \emph{first} deposit per key per
+  assignment and refuses a second as a duplicate; there are no amendments. If staff
+  publish a corrected roster, update it and deposit again: the server can replace only
+  your same-tag entry from the superseded roster. Never use \code{-{}-direct}: it skips
+  Tor and shows the server your IP address.
+\item \textbf{Optional: check your entry} once the board is published:
+\begin{verbatim}
+  python3 tools/anon-report.py verify-bundle \
+      anon-report/bulletin/A1/<your tag>.json \
+      --roster anon-report/roster.json
+\end{verbatim}
+\item \textbf{Attendance} (after \file{anon-report/tags-A1.json} appears). This proves
+  you deposited \emph{a} report without revealing which; your nonce is your JHED:
+\begin{verbatim}
+  python3 tools/anon-report.py attend \
+      --roster anon-report/roster.json --assignment A1 \
+      --tags anon-report/tags-A1.json --nonce <your JHED>
+\end{verbatim}
+  Upload the resulting \file{attendance.json} to the Gradescope assignment
+  \textbf{``A1 attendance''}, under your own name. If the tool says your tag isn't in
+  the list, your deposit didn't land or the snapshot predates it --- ask on Piazza
+  rather than using \code{-{}-force}.
+\item \textbf{Keep things separate.} The report, the receipt, and
+  \file{attendance.json} never go into your main assignment submission on Gradescope.
+  Keep \file{\textasciitilde/.anon-report/} for the rest of the semester.
+\end{enumerate}
+
+\section*{Questions you might have}
+
+\begin{itemize}
+\item \emph{I didn't use an agent.} Then there is no report to deposit for this
+  assignment; nothing else to do.
+\item \emph{I lost my key.} You can't sign or prove attendance without it. Generate a
+  new one with \code{keygen} and tell us on Piazza (privately); it goes on the next
+  roster version. Back the key up this time.
+\item \emph{Tor won't connect on campus.} Use a bridge: Tor Browser $\to$ Settings
+  $\to$ Connection $\to$ Bridges $\to$ Snowflake. Nothing else changes.
+\item \emph{Can I see that my report arrived?} Yes --- step 6. The board is public
+  precisely so that everyone can check the box isn't dropping deposits.
+\item \emph{Can the instructor tell it's mine?} Not from the system. See ``What it
+  doesn't protect'' for the honest residual: timing and writing style.
+\item \emph{What does the server keep?} Ciphertext bundles, their ring signatures, and
+  tags. No client IP addresses, plaintext, or per-request application log; ordinary
+  system metadata may still reflect receipt timing.
+\end{itemize}
+
+
+\bigskip
+\noindent\rule{\textwidth}{0.4pt}
+
+\medskip\noindent\textbf{Authorship and AI usage note} \emph{(in the same format this course asks of you).} This handout and the initial tool and server were written by \textbf{Matthew Green} with \textbf{Claude} (Anthropic's Fable~5 model, via Claude Code). \textbf{OpenAI Codex} later performed a security review, hardening, adversarial and Tor end-to-end tests, and deployment verification. An early version used a wrong 2048-bit group prime; the current tool embeds the published RFC~3526 value and checks basic group invariants before use. Verify your constants.
+
+\end{document}

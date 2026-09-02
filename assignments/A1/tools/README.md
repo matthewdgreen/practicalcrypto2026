@@ -26,7 +26,7 @@ file, `anon-report/roster.json`, in the course repository (pull first).
 
 ```bash
 python3 tools/anon-report.py deposit agent-report.md --roster anon-report/roster.json --assignment A1
-#   -> ACCEPTED tag ...   (a receipt is saved under ~/.anon-report/receipts/; re-send it with `upload` if Tor was down)
+#   -> ACCEPTED tag ...   (a mode-0600 receipt is saved under ~/.anon-report/receipts/; re-send it with `upload` if Tor was down)
 python3 tools/anon-report.py attend --roster anon-report/roster.json --assignment A1 \
     --tags anon-report/tags-A1.json --nonce <from the attendance instructions>
 #   -> attendance.json    (submit under your own name; it reveals only that you deposited *a* report)
@@ -42,6 +42,10 @@ python3 tools/anon-report.py verify-attend attendance.json --roster anon-report/
 
 If campus wifi blocks Tor, turn on a bridge in Tor Browser (Settings → Connection
 → Bridges; Snowflake works from most networks) and try again -- nothing else changes.
+The upload performs a short anti-abuse computation before the server spends
+several seconds checking the ring signature; this is expected. If course staff
+must correct the roster while deposits are open, pull the correction and make a
+fresh deposit: the server will replace your same-tag bundle from the old roster.
 
 ## What it is
 

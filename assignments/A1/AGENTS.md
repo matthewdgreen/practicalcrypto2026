@@ -278,8 +278,8 @@ reassuring them. Record the outcome in the agent report.
 When the student says they are done (or asks for it), write `agent-report.md`.
 This is **not graded**, is **not about the student**, and is **not part of the
 submission** — it is turned in anonymously through a separate channel
-(announced on Piazza) so the course staff can learn how well these
-instructions worked as a teaching tool. **It will not identify the student**
+(see `anon-report.md` and the filing steps below) so the course staff can learn
+how well these instructions worked as a teaching tool. **It will not identify the student**
 — no name, JHED, email, or identifying information of any kind — and the
 course staff do not, and cannot, link reports to students. Because it is
 anonymous, it must be **privacy-preserving by construction**:
@@ -318,14 +318,17 @@ anything they are not comfortable sharing, and they — not you — decide wheth
 to turn it in at all. Do not write it into the submission directory that goes
 to Gradescope; put it somewhere the student can copy from (e.g., alongside the
 project, outside `bin/` and `src/`), and remind them it goes through the
-separate anonymous channel. Also remind them that their AI usage note ends
-with an honor-system line stating whether they turned the report in.
+separate anonymous channel.
 
 ## Filing the report through the anonymous channel
 
 The course provides `tools/anon-report.py` (one file, standard library only;
-`--help` documents it). Everything the channel publishes lives in the public
-course repository under `anon-report/`:
+`--help` documents it). The student-facing handout is `anon-report.md` (and
+`anon-report.pdf`) in the assignment directory; the steps below match it, and
+if they ever disagree, the handout wins. Dates for Assignment 1: roster
+**Mon Sep 14**; deposit by **Sun Sep 20**; tags snapshot ≈ Mon Sep 21;
+attendance proof by **Fri Sep 25**. Everything the channel publishes lives in
+the public course repository under `anon-report/`:
 
 - `roster.json` — published **Mon Sep 14**: every registered public key, the
   course encryption key, and the drop box's `.onion` address, all in one file;
@@ -340,8 +343,8 @@ or a tag; never edit these files. (Pull the repository before using them.)
 **Step A — Part 0 (now):** `keygen` and `pubkey.txt` in the submission, as
 above. Nothing else until the roster exists.
 
-**Step B — deposit (after the roster is published, when the student says the
-report is final):**
+**Step B — deposit (after the roster is published and by Sun Sep 20, when the
+student says the report is final):**
 
 1. Confirm the student has read the report and wants to send it — they decide,
    and they may decline. Confirm it contains nothing identifying (see above).
@@ -355,23 +358,32 @@ report is final):**
    `~/.anon-report/receipts/`. The report is encrypted to the course key on the
    student's machine before it leaves; the server and the public board hold
    only ciphertext, and only the instructor can read it.
-4. **Do not re-run a successful deposit.** The box keeps the *first* deposit
-   per key per assignment and rejects a second as a duplicate. If the upload
-   failed (Tor not connected), fix Tor and re-send the saved receipt:
+4. **One shot — do not re-run a successful deposit.** The box keeps the
+   *first* deposit per key per assignment and rejects a second as a duplicate;
+   there are no amendments. If staff publish a corrected roster, update it and
+   deposit again; only the same-tag entry from the superseded roster can be
+   replaced. If the upload failed (Tor not connected), fix Tor
+   and re-send the saved receipt:
    `python3 tools/anon-report.py upload ~/.anon-report/receipts/<file> --roster anon-report/roster.json`
 5. **Never use `--direct`** — it bypasses Tor and exposes the student's IP.
    Never place the report, the receipt or bundle, `attendance.json`, or anything
    from `~/.anon-report/` into the Gradescope submission.
-6. Set the honor line in `ai-usage.md` to "Agent report: submitted anonymously".
+6. Optionally, note in `ai-usage.md` that a report was submitted (there is no
+   required honor line for Assignment 1).
+7. Optional self-check once the board is published: the deposit's tag names
+   the entry, so
+   `python3 tools/anon-report.py verify-bundle anon-report/bulletin/A1/<tag>.json --roster anon-report/roster.json`
+   confirms it arrived intact.
 
-**Step C — attendance (after `anon-report/tags-A1.json` is published; for A1
-this is a pilot and is *not* required for review-lab sign-up):**
-`python3 tools/anon-report.py attend --roster anon-report/roster.json --assignment A1 --tags anon-report/tags-A1.json --nonce <nonce from the attendance instructions on Piazza>`
-writes `attendance.json`, which the student submits under their own name where
-the instructions say. It proves they deposited *a* report without revealing
-which. If the tool says their tag is not in the list, the deposit did not land
-or the snapshot predates it — do not use `--force`; tell the student to check
-Piazza.
+**Step C — attendance (after `anon-report/tags-A1.json` is published, ≈ Mon
+Sep 21; due Fri Sep 25; for A1 this is a pilot and is *not* required for
+review-lab sign-up):** the nonce is the student's JHED.
+`python3 tools/anon-report.py attend --roster anon-report/roster.json --assignment A1 --tags anon-report/tags-A1.json --nonce <student's JHED>`
+writes `attendance.json`, which the student uploads to the Gradescope
+assignment **"A1 attendance"** under their own name. It proves they deposited
+*a* report without revealing which. If the tool says their tag is not in the
+list, the deposit did not land or the snapshot predates it — do not use
+`--force`; tell the student to ask on Piazza.
 
 ## Overrides
 

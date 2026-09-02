@@ -58,6 +58,8 @@ By the end of this assignment you should be able to explain (without notes, to a
 If you use coding agents, we've provided you with an \file{AGENTS.md} and \file{CLAUDE.md} file. These are designed to help make your coding agent useful in helping you learn, rather than just doing the work for you. Put both in your working directory and make sure your coding agent can read them. We know you can remove or override them; they're not a requirement: they're there to help you learn. (Read them!) If you do use coding agents, you'll also be expected to turn in an AI usage note written by you (part of your submission), and we ask you to turn in an Agent report \emph{written by the agent} --- \textbf{anonymously, through a separate channel, with no name or identifying information} (see \S7). The agent files tell it how to do that.
 
 \medskip\noindent First, \textbf{by Friday September 11}, you will register a public key (Part 0). Then, for the assignment proper, you will:
+
+\medskip
 \begin{enumerate}
 \item implement the Vigen\`ere cipher, including both encipherment and decipherment modes;
 \item recover an unknown key length from ciphertext alone using the \textbf{index of coincidence} (IoC) technique;
@@ -83,13 +85,13 @@ If you use coding agents, we've provided you with an \file{AGENTS.md} and \file{
 \toprule
 Part & Points & Assessed by \\
 \midrule
-0. Public-key registration (\textbf{due Sep 11}) & required (gate) & Gradescope (separate) \\
+0. Public-key registration (\textbf{due Sep 11}) & required & Gradescope (separate) \\
 1. Vigen\`ere encrypt/decrypt & 10 & autograder \\
 2. Key-length recovery (IoC) & 25 & autograder \\
 3. Key recovery (frequency analysis) & 30 & autograder \\
 4. Empirical analysis of your tool & 15 & TA-graded, discussed in review \\
 5. Written questions & 20 & TA-graded \\
-Design note + AI usage note & required (gate) & used to prepare your review \\
+Design note + AI usage note & required & used to prepare your review \\
 \midrule
 \textbf{Total} & \textbf{100} & $\times$ Review Lab multiplier \\
 \bottomrule
@@ -98,15 +100,15 @@ Design note + AI usage note & required (gate) & used to prepare your review \\
 
 \section*{Part 0 --- Register your public key (required; due Fri Sep 11, 11:59 pm)}
 
-This part takes five minutes and has its own, \textbf{earlier} deadline. Run the provided tool (pure Python, no dependencies --- your agent can do this):
+This part takes five minutes and has its own, \textbf{earlier} deadline. Run the provided tool on your own machine (pure Python, no dependencies. If you're using coding agents, your agent can do this):
 \begin{verbatim}
     python3 tools/anon-report.py keygen
 \end{verbatim}
-It creates a private key in \file{\textasciitilde/.anon-report/key.json} and writes \file{pubkey.txt} in the current directory. Submit \file{pubkey.txt} to the separate Gradescope assignment \textbf{``A1 Part 0: key registration''} by \textbf{Friday, September 11, 11:59 pm}.
+It creates a private key in \file{\textasciitilde/.anon-report/key.json} and writes \file{pubkey.txt} in the current directory. \underline{Please do not lose your private key!} Submit \file{pubkey.txt} to the separate Gradescope assignment \textbf{``A1 Part 0: key registration''} by \textbf{Friday, September 11, 11:59 pm}.
 
-\medskip\noindent\emph{Why:} these keys are how the anonymous agent-report channel works (\S7). On \textbf{Monday, September 14} we publish the roster of all registered public keys; your agent will then sign your report with a \emph{linkable ring signature} over that roster --- proving ``some enrolled student wrote this'' without revealing which --- and after the report deadline you will prove you submitted without revealing which report is yours. Later in the course you will build this scheme yourself. For now, just generate and register the key.
+\medskip\noindent\emph{Why:} you'll use this key to submit your anonymous agent report (see \S7). %On \textbf{Monday, September 14} we publish the roster of all registered public keys; your agent will then sign your report with a \emph{linkable ring signature} over that roster --- proving ``some enrolled student wrote this'' without revealing which --- and after the report deadline you will prove you submitted without revealing which report is yours. Later in the course you will build this scheme yourself. For now, just generate and register the key.
 
-\medskip\noindent\emph{Rules:} keep the private key --- you need it for every assignment this semester; back it up. \textbf{Never paste it into any note, report, chat, or submission.} If you lose it, you will re-register on the next roster. Part 0 carries no points but is \textbf{required for review-lab sign-up}.
+\medskip\noindent\emph{Rules:} keep the private key! You need it for every assignment this semester; back it up. \textbf{Never paste it into any note, report, chat, or submission.} If you lose it, you will re-register on the next roster. Part 0 carries no points but is \textbf{required for review-lab sign-up}.
 
 \section*{Part 1 --- Vigen\`ere encipherment and decipherment (10 points)}
 
@@ -120,12 +122,14 @@ Implement two command-line programs:
 \item The input file is a text file of at most 100~KB. \textbf{Strip and ignore every character that is not a letter} (\code{[a-zA-Z]}); treat lowercase as uppercase.
 \item Output is uppercase letters only, no whitespace, to standard output. You may insert optional newlines for readability; the autograder ignores them.
 \end{itemize}
+
+\medskip \noindent
 Example:
 \begin{verbatim}
     vigenere-encrypt PLEBISCITE plaintext.txt > ciphertext.txt
     vigenere-decrypt PLEBISCITE ciphertext.txt > recovered.txt
 \end{verbatim}
-\emph{This part is glue. Nobody will ask you about it in the review.}
+\emph{This part is glue. You should understand how the cipher works, so I recommend implementing it yourself. But nobody will ask you about it in the review.}
 
 \section*{Part 2 --- Recovering the key length (25 points)}
 
@@ -136,11 +140,16 @@ Implement:
 Given a ciphertext with an unknown key, use the \textbf{index of coincidence} to determine the key length. Output \textbf{exactly one line containing one integer}: your best guess.
 
 \medskip\noindent Requirements and grading rules:
+
+\medskip \noindent
+
 \begin{itemize}
 \item Your tool must be reliable for \textbf{key lengths up to 20} on English-language ciphertexts of \textbf{at least 20,000 letters}. Full-credit tests are drawn from this range. A few bonus tests use longer keys (up to 32); they can only help you.
 \item Report the \textbf{shortest period}. Note that the keys \code{BUZZSAW} and \code{BUZZSAWBUZZSAW} are technically both valid. However: if the true key length is 7 and you report 14, you receive half credit for that test, and the interviewer in Review Lab 1 will ask you why your tool did that. Think carefully about how you pick among candidate lengths!
 \item Grading ciphertexts are already normalized (uppercase letters only). Plaintext inputs elsewhere in this assignment may not be.
 \end{itemize}
+
+\medskip \noindent
 \emph{The key-length decision is critical to the in-person review (\S6).}
 
 \section*{Part 3 --- Recovering the key (30 points)}
@@ -152,10 +161,12 @@ Implement:
 Given a ciphertext and a key length, recover the key \textbf{using the ciphertext only}, by frequency analysis of each column. Output your candidate key(s), \textbf{one per line, at most 10 lines}, best guess first.
 
 \medskip\noindent Grading rules:
+
+\medskip \noindent
 \begin{itemize}
 \item An exact match earns full credit for that test. Otherwise we award partial credit proportional to the similarity of your best candidate to the true key (Levenshtein ratio), so a key with one wrong letter is worth almost full credit.
 \item A correct key repeated (e.g., \code{KINGKING} for \code{KING}) earns half credit.
-\item More than 10 candidates is penalized. Prune.
+\item More than 10 candidates is penalized. 
 \item You may combine Parts 2 and 3 into a single tool,
 \begin{verbatim}
     vigenere-break <ciphertext-file>
@@ -164,24 +175,32 @@ whose first output line is the key length and whose remaining lines are candidat
 \end{itemize}
 You do not need to break every ciphertext perfectly. You should be able to recover most keys on most English texts of the stated size.
 
+\medskip \noindent
 \emph{The column-shift scoring function is critical to the in-person review (\S6).}
 
 \section*{Part 4 --- Empirical analysis: when does your tool work? (15 points)}
 
 This is the part of the assignment that most directly measures what we care about. Characterize your own key-length recovery (Part 2) and key recovery (Part 3) as a function of \textbf{key length} and \textbf{ciphertext length}.
 
-\medskip\noindent Procedure:
+\medskip\noindent How to do this:
+
+\medskip \noindent
 \begin{enumerate}
 \item Obtain a public-domain English text of at least 200,000 letters (you can find many candidates at Project Gutenberg, \url{https://www.gutenberg.org/}). Normalize it with the same rule as Part 1.
 \item For each key length $k$ in $\{$3, 5, 7, 10, 15, 20$\}$ and each ciphertext length $n$ in $\{$100, 200, 500, 1000, 2000, 5000, 20000$\}$ letters: run \textbf{at least 20 trials}, each with a fresh uniformly random key of length $k$ and a random $n$-letter window of the text.
 \item Record, per $(k, n)$ cell: the fraction of trials where Part 2 reported the exact key length, and the fraction where Part 3 recovered the exact key.
 \end{enumerate}
+
+\medskip \noindent
 Deliverable: \file{analysis.md} (or PDF), containing:
+\medskip \noindent
 \begin{itemize}
 \item the two $6 \times 7$ tables (a plot is welcome but not required);
 \item a short explanation (\textbf{$\leq$ 300 words}) of the boundary you observe: where does key-length recovery become unreliable, and \emph{why}, in terms of what the index of coincidence is estimating and how many letters each column has to estimate it from; and
 \item one sentence on whether key recovery (Part 3) fails at the same boundary as key-length recovery (Part 2), and why or why not.
 \end{itemize}
+
+\medskip \noindent
 You may use any tool to build the experiment harness and produce the tables. The explanation must be your own reasoning, and you will be asked to defend it.
 
 \section*{Part 5 --- Written questions (20 points, 5 each)}
@@ -189,7 +208,7 @@ You may use any tool to build the experiment harness and produce the tables. The
 Answer in a file \file{written.md} (or PDF). Keep each answer under half a page.
 \begin{enumerate}
 \item \textbf{Long keys.} Suppose we modify Vigen\`ere to use a single key at least as long as the message. Explain why this can be substantially more secure, and state precisely what conditions the key must satisfy for the security to hold. What goes wrong if any one condition is violated?
-\item \textbf{Why IoC works.} For English text, the index of coincidence is approximately 0.066; for uniformly random letters it is approximately 0.038. Explain why the IoC of a \emph{column} of a Vigen\`ere ciphertext (every $k$-th letter) is close to the English value when $k$ is the true key length and close to the random value otherwise. Then explain what happens when $k$ is a \emph{multiple} of the true key length --- and what that implies for your decision rule in Part 2.
+\item \textbf{Why IoC works.} For English text, the index of coincidence is approximately 0.066; for uniformly random letters it is approximately 0.038. Explain why the IoC of a \emph{column} of a Vigen\`ere ciphertext (every $k$-th letter) is close to the English value when $k$ is the true key length and close to the random value otherwise. Then explain what happens when $k$ is a \emph{multiple} of the true key length, and what that implies for your decision rule in Part 2.
 \item \textbf{Kasiski vs.\ IoC.} The Kasiski examination is the other classical way to find the key length: repeated substrings in the ciphertext (trigrams or longer) tend to occur at distances that are multiples of the key length, because the same plaintext fragment was enciphered under the same key alignment; the gcd of the observed distances suggests the period. It is covered in the assigned reading --- see the MTU tutorial's Kasiski page: \url{https://pages.mtu.edu/~shene/NSF-4/Tutorial/VIG/Vig-Kasiski.html}. Describe the method in a paragraph, then give one situation in which Kasiski succeeds where IoC-based key-length recovery is unreliable, and one situation with the reverse. (Your Part 4 data may help.)
 \item \textbf{IoC as a fitness function: breaking the Enigma plugboard.} The index of coincidence was used in anger against rotor machines. Read the short handout \emph{Hillclimbing the Enigma Machine} (Sullivan \& Weierud; in the assignment repository). With the wheel settings correct but \emph{no} plugboard cables connected, only about one letter in twenty-one decrypts correctly, and the output looks like noise.
   \begin{enumerate}[label=(\alph*)]
@@ -202,10 +221,11 @@ Answer in a file \file{written.md} (or PDF). Keep each answer under half a page.
 
 \section*{\S6 --- Review Lab 1: what will be examined}
 
-Review Lab 1 is a 15-minute individual session with course staff during the week of September 21. You don't have to bring anything. Your submission will be on the screen. This review is graded on a comprehension rubric and produces the multiplier on your assignment credit. You won't be asked about glue code.
+Review Lab 1 is a 15-minute individual session with course staff during the week of September 21. You don't have to bring anything: your submission will be on the screen. This review is graded on a comprehension rubric and produces the multiplier on your assignment credit. You won't be asked about glue code.
 
 \subsection*{Review-critical regions}
 Three parts of your submission are designated \textbf{review-critical}. You will be examined on them as if you had written every line yourself, regardless of how they were produced:
+\medskip \noindent
 \begin{enumerate}
 \item \textbf{The key-length decision rule} (Part 2): how candidate lengths are scored, and how you choose among them, including ties and multiples.
 \item \textbf{The column-shift scoring function} (Part 3): the statistic you compare against English letter frequencies, and why it identifies the correct shift.
@@ -219,8 +239,12 @@ Three parts of your submission are designated \textbf{review-critical}. You will
 \item \textbf{Modification ($\approx$5 min).} Make a small change live, or find a flaw that we have planted in a \emph{copy} of your own code.
 \end{itemize}
 
-\subsection*{Sample prompts (the real ones will be in this spirit)}
+\subsection*{Some example questions (the real ones will be in this spirit)}
+
+\medskip \noindent
 \emph{Prediction:}
+
+\medskip \noindent
 \begin{itemize}
 \item ``Here is a 400-letter ciphertext with a 7-letter key. Will \code{vigenere-keylength} get it? Why or why not?''
 \item ``Same tool, but the plaintext was German. What breaks, and where in your code?''
@@ -229,7 +253,10 @@ Three parts of your submission are designated \textbf{review-critical}. You will
 \item ``Walk me through your column-scoring statistic. If it's chi-squared: what are the expected counts, and what happens to the statistic when a column has only 15 letters and the letter Z never appears?''
 \item ``Why does the correct shift \emph{minimize} chi-squared but \emph{maximize} a dot product against English frequencies? Could a wrong shift ever win under one statistic but not the other?''
 \end{itemize}
+
+\medskip \noindent
 \emph{Modification:}
+\medskip \noindent
 \begin{itemize}
 \item ``Replace your column-scoring statistic with a different one (chi-squared $\leftrightarrow$ dot product). Does it still work? Convince me.''
 \item ``This copy of your Part 2 reports 14 for a 7-letter key. Find the bug.''
@@ -253,14 +280,14 @@ Level & You can\ldots & Multiplier \\
 \end{center}
 The Review Lab component of the course grade (25\% overall) is scored on the same rubric.
 
-\section*{\S7 --- Required notes}
+\section*{\S7 --- Required submission notes files}
 \emph{You must include each of these as a separate file. Any missing file means you cannot sign up for a review.}
 
-\medskip\noindent\textbf{Design note} (\file{design.md}, $\leq$ 1 page): your key-length decision rule (including tie-break and how you handle multiples), your column-scoring statistic, and known failure cases. Not graded for style; used by your interviewer to prepare questions. It is in your interest for it to be accurate.
+\medskip\noindent\textbf{Design note} (\file{design.md}, $\leq$ 1 page): your key-length decision rule (including tie-break and how you handle multiples), your column-scoring statistic, and known failure cases. Not graded for style; used by your interviewer to prepare questions. It's in your interest for it to be accurate.
 
-\medskip\noindent\textbf{AI usage note} (\file{ai-usage.md}, a few paragraphs): which tools you used; what you delegated to them; what you verified yourself and how; and one thing you learned from --- or caught wrong in --- the AI's output. This note is not graded for \emph{how much} you used AI. It will be read by your interviewer, who may start with the parts you say the AI wrote. Omitting or misrepresenting it is an academic integrity violation. End the note with one line: \emph{``Agent report: submitted anonymously / not submitted / no agent used.''}
+\medskip\noindent\textbf{AI usage note} (\file{ai-usage.md}, a few paragraphs): which tools you used; what you delegated to them; what you verified yourself and how; and one thing you learned from (or caught wrong in) the AI's output. This note is not graded for \emph{how much} you used AI. It will be read by your interviewer, who may start with the parts you say the AI wrote. Omitting or misrepresenting it is an academic integrity violation. %End the note with one line: \emph{``Agent report: submitted anonymously / not submitted / no agent used.''}
 
-\medskip\noindent\textbf{Agent report} (\emph{optional, ungraded, anonymous --- not part of your submission}): if you used a coding agent with the provided \file{AGENTS.md}, the agent will offer to write a short report on how well its teaching instructions worked --- what it did versus what you did, where the ``explain first'' rule helped or got in the way, and what it would change about the instructions. We collect these to improve the instructions. \textbf{They are anonymous.} The report must not contain your name, JHED, email, file paths, verbatim code, or anything else that identifies you; the agent is instructed to write it that way, and you should check that it complied before sending. Do \textbf{not} include it in your Gradescope submission --- it goes through a separate anonymous channel announced on Piazza, and we do not, and cannot, link reports to students. We ask everyone who used an agent to turn one in. Because the channel is anonymous we cannot verify who did; please record in your AI usage note whether you did (see above) --- that line is on your honor. For this assignment the channel is a \textbf{pilot}: reports are signed with your registered key (Part 0) and deposited through the anonymous channel using the same \file{tools/anon-report.py} (its \code{deposit} mode); the roster and deposit instructions are published on September 14. Deposits travel over Tor, so \textbf{install Tor Browser} (free, \url{https://www.torproject.org}) before then. The honor line remains the record for A1.
+\medskip\noindent\textbf{Agent report} (\emph{optional, ungraded, anonymous --- not part of your submission}): if you used a coding agent with the provided \file{AGENTS.md}, the agent will offer to write a short report on how well its teaching instructions worked: what it did versus what you did, where the ``explain first'' rule helped or got in the way, and what it would change about the instructions. We collect these to improve the instructions. \textbf{They are anonymous.} The report must not contain your name, JHED, email, file paths, verbatim code, or anything else that identifies you; the agent is instructed to write it that way, and you should check that it complied before sending. Do \textbf{not} include it in your Gradescope submission --- it goes through a separate anonymous channel announced on Piazza, and the system is built so that we cannot link reports to students (see \S9 and the handout \file{anon-report.pdf} for exactly what that does and doesn't cover).
 
 \section*{\S8 --- What to submit}
 
@@ -279,11 +306,27 @@ Your submission is a directory (zip or repo) containing:
     ai-usage.md           # Section 7
 \end{verbatim}
 (The optional agent report is \textbf{not} submitted here --- see \S7.)
+
+\medskip \noindent
 \begin{itemize}
 \item \file{build.sh} runs on the published course container (Ubuntu LTS with current toolchains for Python, Go, Rust, C/C++, Java, and Node; the Dockerfile is in the assignment repository and the exact versions are posted on Piazza). It may compile, or it may simply make wrapper scripts executable. Executables may be scripts with a shebang line.
 \item If \file{build.sh} fails or the executables are missing, the autograder score is 0 and you cannot sign up for the Review Lab. \textbf{Test your build in the container before the deadline.}
 \item Executables must read the input file given on the command line, write only the specified output to stdout, and exit 0. Each test has a 60-second timeout.
 \item Sample plaintext/key/ciphertext triples, the normalization command, and a submission template are provided in the assignment repository.
 \end{itemize}
+
+\section*{\S9 --- Submitting your anonymous agent report}
+
+It is perfectly fine to have a coding agent submit your anonymous agent report. In fact, that's exactly how we expect you to use it. The necessary instructions are in {\tt AGENTS.md}, and in the separate handout \file{anon-report.pdf} (in the assignment repository) if you'd like to do it yourself.
+
+For this assignment the channel is a \textbf{pilot}: reports are encrypted to the course public key. They're then signed with your registered key (that you registered in Part 0) and deposited through the anonymous channel using the same \file{tools/anon-report.py} (its \code{deposit} mode). The roster will be published on September 14. Deposits travel over Tor, so please \textbf{install Tor Browser} (free, \url{https://www.torproject.org}) before then.
+
+\medskip\noindent In brief: your report is encrypted on your own machine so that only the instructor can read it, signed with a ring signature that proves it came from an enrolled student without saying which, and deposited over Tor so the server never sees your IP address. What remains is ordinary metadata such as timing and writing style, which we don't inspect. The handout \file{anon-report.pdf} spells out the steps, the dates (deposit by \textbf{Sun Sep 20}; attendance proof by \textbf{Fri Sep 25}), and exactly what the guarantee does and doesn't cover. \textbf{Read your report before it is sent.}
+
+
+\bigskip
+\noindent\rule{\textwidth}{0.4pt}
+
+\medskip\noindent\textbf{Authorship and AI usage note} \emph{(in the same format this course asks of you).} This handout was written by \textbf{Matthew Green} with \textbf{Claude} (Anthropic's Fable~5 model, via Claude Code). Delegated to the AI: recovering and comparing the previous versions of this assignment, drafting the text, the \LaTeX{} conversion, and the autograder and review-lab tooling. Done by the human: the assignment's design --- what is examined, how, and why --- every grading decision, and review and editing of every section. One thing we caught: the first version of the Part~4 experiment grid was too easy --- a correct tool never failed anywhere on it --- which we discovered only by running a reference implementation through it. The grid you have is the one where the boundary is actually visible.
 
 \end{document}

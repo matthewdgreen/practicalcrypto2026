@@ -8,4 +8,4 @@
 
 **One thing I learned from — or caught wrong in — the AI's output:**
 
-Agent report: <!-- submitted anonymously / not submitted / no agent used -->
+<!-- optional: Agent report: submitted anonymously / not submitted / no agent used -->
