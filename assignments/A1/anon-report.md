@@ -132,7 +132,7 @@ holds your Part 0 key (`~/.anon-report/key.json`).
 **Authorship and AI usage note** *(in the same format this course asks of you).*
 This handout and the initial tool and server were written by **Matthew Green**
 with **Claude** (Anthropic's Fable 5 model, via Claude Code). **OpenAI Codex**
-later performed a security review, hardening, adversarial and Tor end-to-end
-tests, and deployment verification. An early version used a wrong 2048-bit
+(the Daybreak Blue and GPT 5.6 Sol models) later performed a security review,
+hardening, adversarial and Tor end-to-end tests, and deployment verification. An early version used a wrong 2048-bit
 group prime; the current tool embeds the published RFC 3526 value and checks
 basic group invariants before use. Verify your constants.
