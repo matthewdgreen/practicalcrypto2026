@@ -18,8 +18,9 @@ ciphertext-only cryptanalysis (index of coincidence for key length, frequency
 analysis for the key), plus an empirical analysis and written questions. The
 assignment text is in `A1.md`; read it first.
 
-The student's grade on this assignment is **multiplied by their performance in
-a 15-minute in-person Review Lab** in which they must, with no tools:
+After submitting, the student sits a **15-minute in-person Review Lab** (graded
+separately; the three labs are 25% of the course grade) in which they must, with
+no tools:
 
 1. explain their pipeline;
 2. **predict** what their code will do under conditions they haven't tried,

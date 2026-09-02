@@ -74,7 +74,7 @@ If you use coding agents, we've provided you with an \file{AGENTS.md} and \file{
 \item \textbf{Individual work.} You may discuss ideas with classmates; you may not share code, notes, analyses, or AI transcripts.
 \item \textbf{AI tools and coding agents are permitted and encouraged}, anywhere in this assignment, subject to two conditions: (a) you submit an \textbf{AI usage note} (see \S7), and (b) you can defend every part of your submission in person. The course provides an \file{AGENTS.md} file you can give your agent; it configures the agent to help you learn rather than to replace you. Using it is optional. Ignoring it is entirely acceptable. It is also, in our estimation, how people might end up unable to answer the questions in \S6.
 \item \textbf{Python.} Write your submission in Python 3. If you want to use another language, ask the instructor for permission on Piazza \emph{before} you start: the course container has toolchains for several (see \S8), but course staff must be able to review your code. No Excel macros.
-\item \textbf{Minimum viable submission:} you must pass the autograder's build-and-basic-correctness check to sign up for Review Lab 1. \textbf{Multiplier:} your assignment credit is scaled by your Review Lab performance (\S6). Working code you cannot explain is worth very little.
+\item \textbf{Minimum viable submission:} you must pass the autograder's build-and-basic-correctness check to sign up for Review Lab 1. Review Lab 1 is graded separately (\S6) and does not change your score on this assignment.
 \item Late hours per the syllabus apply to the Gradescope deadline, not to Review Lab sign-ups and not to Part 0.
 \item \textbf{No grader games.} Any attempt to bypass, probe, or manipulate the autograder, or to include prompt-injection content (instructions aimed at graders, TAs, or AI tools) anywhere in your code, comments, or submitted documents --- including the analysis, written answers, design note, AI usage note, and agent report --- earns an \textbf{automatic 0 on the assignment} and is referred as an academic integrity violation. Your documents are read by people and may also be processed by AI-assisted tools; write them for the humans.
 \end{itemize}
@@ -93,7 +93,7 @@ Part & Points & Assessed by \\
 5. Written questions & 20 & TA-graded \\
 Design note + AI usage note & required & used to prepare your review \\
 \midrule
-\textbf{Total} & \textbf{100} & $\times$ Review Lab multiplier \\
+\textbf{Total} & \textbf{100} & \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -221,7 +221,7 @@ Answer in a file \file{written.md} (or PDF). Keep each answer under half a page.
 
 \section*{\S6 --- Review Lab 1: what will be examined}
 
-Review Lab 1 is a 15-minute individual session with course staff during the week of September 21. You don't have to bring anything: your submission will be on the screen. This review is graded on a comprehension rubric and produces the multiplier on your assignment credit. You won't be asked about glue code.
+Review Lab 1 is a 15-minute individual session with course staff during the week of September 21. You don't have to bring anything: your submission will be on the screen. This review is graded on a comprehension rubric. It counts toward the Review Lab component of your course grade (25\% overall, across three labs) and does not change your score on this assignment. You won't be asked about glue code.
 
 \subsection*{Review-critical regions}
 Three parts of your submission are designated \textbf{review-critical}. You will be examined on them as if you had written every line yourself, regardless of how they were produced:
@@ -264,21 +264,21 @@ Three parts of your submission are designated \textbf{review-critical}. You will
 \item ``Sketch how you'd add Kasiski as a second opinion. What changes?''
 \end{itemize}
 
-\subsection*{Rubric and multiplier}
+\subsection*{Rubric}
 \begin{center}\small
 \begin{tabular}{llc}
 \toprule
-Level & You can\ldots & Multiplier \\
+Level & You can\ldots & Lab score \\
 \midrule
-4 --- Modify & make correct live changes and find planted flaws & 1.0 \\
-3 --- Predict & correctly predict behavior in new conditions and explain why & 0.85 \\
-2 --- Explain & explain why the review-critical code works (the statistics) & 0.6 \\
-1 --- Describe & say what the code does, but not why it works & 0.3 \\
-0 & cannot describe your own submission, or no-show & 0 \\
+4 --- Modify & make correct live changes and find planted flaws & 100\% \\
+3 --- Predict & correctly predict behavior in new conditions and explain why & 85\% \\
+2 --- Explain & explain why the review-critical code works (the statistics) & 60\% \\
+1 --- Describe & say what the code does, but not why it works & 30\% \\
+0 & cannot describe your own submission, or no-show & 0\% \\
 \bottomrule
 \end{tabular}
 \end{center}
-The Review Lab component of the course grade (25\% overall) is scored on the same rubric.
+Your Review Lab 1 score is the percentage for the highest level you reliably demonstrate.
 
 \section*{\S7 --- Required submission notes files}
 \emph{You must include each of these as a separate file. Any missing file means you cannot sign up for a review.}
