@@ -321,6 +321,58 @@ project, outside `bin/` and `src/`), and remind them it goes through the
 separate anonymous channel. Also remind them that their AI usage note ends
 with an honor-system line stating whether they turned the report in.
 
+## Filing the report through the anonymous channel
+
+The course provides `tools/anon-report.py` (one file, standard library only;
+`--help` documents it). Everything the channel publishes lives in the public
+course repository under `anon-report/`:
+
+- `roster.json` — published **Mon Sep 14**: every registered public key, the
+  course encryption key, and the drop box's `.onion` address, all in one file;
+- `tags-A1.json` — the snapshot of deposited-report tags, published after the
+  deposit deadline;
+- `bulletin/A1/` — the public bulletin board of encrypted deposits.
+
+If `anon-report/roster.json` is not in the repository yet, **the channel is
+not open**: say so and stop. Never fabricate a roster, a key, an onion address,
+or a tag; never edit these files. (Pull the repository before using them.)
+
+**Step A — Part 0 (now):** `keygen` and `pubkey.txt` in the submission, as
+above. Nothing else until the roster exists.
+
+**Step B — deposit (after the roster is published, when the student says the
+report is final):**
+
+1. Confirm the student has read the report and wants to send it — they decide,
+   and they may decline. Confirm it contains nothing identifying (see above).
+2. **Tor.** The deposit goes through Tor, and you cannot do this part: ask the
+   student to start **Tor Browser** and leave it open (the tool uses its SOCKS
+   port 9150; a running `tor` daemon on 9050 also works). If campus wifi
+   blocks Tor: Tor Browser → Settings → Connection → Bridges → Snowflake.
+3. Run, from the assignment directory:
+   `python3 tools/anon-report.py deposit agent-report.md --roster anon-report/roster.json --assignment A1`
+   Success prints `ACCEPTED tag ...` and saves a receipt under
+   `~/.anon-report/receipts/`. The report is encrypted to the course key on the
+   student's machine before it leaves; the server and the public board hold
+   only ciphertext, and only the instructor can read it.
+4. **Do not re-run a successful deposit.** The box keeps the *first* deposit
+   per key per assignment and rejects a second as a duplicate. If the upload
+   failed (Tor not connected), fix Tor and re-send the saved receipt:
+   `python3 tools/anon-report.py upload ~/.anon-report/receipts/<file> --roster anon-report/roster.json`
+5. **Never use `--direct`** — it bypasses Tor and exposes the student's IP.
+   Never place the report, the receipt or bundle, `attendance.json`, or anything
+   from `~/.anon-report/` into the Gradescope submission.
+6. Set the honor line in `ai-usage.md` to "Agent report: submitted anonymously".
+
+**Step C — attendance (after `anon-report/tags-A1.json` is published; for A1
+this is a pilot and is *not* required for review-lab sign-up):**
+`python3 tools/anon-report.py attend --roster anon-report/roster.json --assignment A1 --tags anon-report/tags-A1.json --nonce <nonce from the attendance instructions on Piazza>`
+writes `attendance.json`, which the student submits under their own name where
+the instructions say. It proves they deposited *a* report without revealing
+which. If the tool says their tag is not in the list, the deposit did not land
+or the snapshot predates it — do not use `--force`; tell the student to check
+Piazza.
+
 ## Overrides
 
 The student can change any of this. If they turn off the teaching behaviors,
