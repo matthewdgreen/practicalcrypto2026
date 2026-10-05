@@ -412,14 +412,15 @@ test any of this against real services or other students.
 | Date | Milestone |
 |---|---|
 | Before the client checkpoint | Release the specification, handout, working starter kit, and public eligibility checks together |
-| Wed Oct 7 | ML-KEM lecture; finish the hybrid portion after this lecture if needed |
+| Mon Oct 5 | ML-KEM lecture; finish the hybrid portion after this lecture if needed |
+| Wed Oct 7 | Midterm exam (covers material through Sep 30; A2 is not on it) |
 | Fri Oct 9 | Suggested, ungraded progress target: padding and JM1 records |
 | Fri Oct 23, 11:59 pm Eastern | Client checkpoint, including both suites; Part 1 is graded on it |
 | Mon Oct 26, 9:00 am Eastern | Last late checkpoint accepted; reference-client and exercise-kit release |
 | Fri Nov 6, 11:59 pm Eastern | Final submission |
 | Week of Nov 9 | Review Lab 2 |
 
-The KEM API abstraction is sufficient to begin JM2 before October 7;
+The KEM API abstraction is sufficient to begin JM2 before the ML-KEM lecture;
 implementing lattice arithmetic is never required. Checkpoint and kit-release
 dates must be confirmed when the assignment is released. If the starter kit is
 delayed, staff must revise the checkpoint schedule rather than shorten the
