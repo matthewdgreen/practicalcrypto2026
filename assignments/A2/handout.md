@@ -412,8 +412,8 @@ test any of this against real services or other students.
 | Date | Milestone |
 |---|---|
 | Before the client checkpoint | Release the specification, handout, working starter kit, and public eligibility checks together |
-| Mon Oct 5 | ML-KEM lecture; finish the hybrid portion after this lecture if needed |
 | Wed Oct 7 | Midterm exam (covers material through Sep 30; A2 is not on it) |
+| Mon Oct 12 | ML-KEM lecture; finish the hybrid (JM2) portion after this lecture if needed |
 | Fri Oct 9 | Suggested, ungraded progress target: padding and JM1 records |
 | Fri Oct 23, 11:59 pm Eastern | Client checkpoint, including both suites; Part 1 is graded on it |
 | Mon Oct 26, 9:00 am Eastern | Last late checkpoint accepted; reference-client and exercise-kit release |
