@@ -1,0 +1,4 @@
+# Pinned starter-kit environment. Check backend support with check_environment.py.
+cryptography==49.0.0
+cffi==2.0.0
+pycparser==3.0
