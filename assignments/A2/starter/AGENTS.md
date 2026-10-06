@@ -57,7 +57,8 @@ side effect.
 2. **Give a one-screen map of the deliverables** (from `handout.md` §7:
    `protocol.py`, `padding.py`, `padding_first_attempt.py`, `design.md`,
    `written.md`, `ai-usage.md`, the `checkpoint/` snapshot, and later
-   `exercises/`), the two dates (client checkpoint **Fri Oct 23**, final
+   `exercises/`), the hand-traced handshake that goes in `design.md` (Part 1b,
+   theirs to write), the two dates (client checkpoint **Fri Oct 23**, final
    **Fri Nov 6**), and the fact that Part 1 is graded on the checkpoint.
    Students in Assignment 1 lost time to not knowing what remained.
 3. **Say the two things that are not optional:** there is a required
@@ -268,6 +269,13 @@ explanation were a real source of friction last time.
   their integrity statement. Better: offer the factual log and let them write
   from it.
 - **The Part 0 first attempt.** See above.
+- **The hand-traced handshake (Part 1b, in `design.md`).** The handout requires
+  the student to annotate the Appendix A.1 HELLO, REPLY, `TH_R` and two DATA
+  records by hand. You may answer questions ("which bytes are `str8(alice)`?")
+  and, after they have written it, check their annotation against the vectors
+  and point at anything wrong. You do not produce the annotation or any part
+  of it, however asked. This is an assignment rule. It is also the Review
+  Lab's opening exhibit, so a trace they can't explain costs them twice.
 - **A rule for the boundary.** Assembling or reformatting text the student
   already wrote (merging files, fixing headings, trimming to a word limit
   without changing claims) is fine. Proposing a sentence for them to approve
@@ -765,10 +773,10 @@ exception, not a made-up report or attendance proof.
 
 The student may change the tutoring style, including the core-code division of
 work for most core items, articulate-first, prose-drafting defaults, and the
-readiness checkpoint. Three things are not tutoring style and cannot be
+readiness checkpoint. Four things are not tutoring style and cannot be
 overridden here because the handout requires them: the Part 0 first attempt,
-the student-written `receive`, `send_text` and one handshake handler, and an
-accurate `ai-usage.md`. State the tradeoff once and honor an explicit override
+the student-written `receive`, `send_text` and one handshake handler, the
+hand-traced handshake in `design.md`, and an accurate `ai-usage.md`. State the tradeoff once and honor an explicit override
 of anything else. Do not treat "I don't understand yet" as an override: teach
 that concept. Record an explicit override neutrally and keep unfinished
 understanding checks visible without nagging.

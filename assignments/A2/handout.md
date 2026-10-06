@@ -236,10 +236,11 @@ contains no reference client or exercise bots.
 | Part | Work | Points |
 |---|---|---:|
 | 0 | Independent padding warmup | 5 |
-| 1 | Interoperable client, both roles and suites | 35 |
+| 1 | Interoperable client, both roles and suites | 25 |
+| 1b | Hand-traced handshake, in `design.md` | 5 |
 | 2 | Controlled negotiation-security exercise | 20 |
 | 3 | Controlled record-layer-security exercise | 20 |
-| 4 | Written explanation and repair analysis | 20 |
+| 4 | Written explanation and repair analysis | 25 |
 | | **Total** | **100** |
 | | Extra credit (Part 1, an interface, bot or agent built on your client) | up to 6 |
 | | Extra credit (Part 4, questions 7–9) | up to 6 |
@@ -285,7 +286,7 @@ treats it as one. The reason is the same as for the padding: the state machine
 is the largest part of the review lab, and in a trial run a student who
 delegated it finished with a correct client of which they had written no part.
 
-**Part 1 is graded on your checkpoint submission** (Friday, October 23), because
+**Part 1 and Part 1b are graded on your checkpoint submission** (Friday, October 23), because
 the exercise kit released after the checkpoint contains a working reference
 client. The public eligibility checks are available from release, so you can see
 where you stand before submitting.
@@ -294,6 +295,29 @@ You may keep fixing your client after the checkpoint. The final submission's
 client is also run, and fixes to checkpoint failures recover up to 5 of the lost
 Part 1 points, provided `design.md` explains each fix in your own words. Keep
 the checkpoint snapshot in `checkpoint/`.
+
+#### Part 1b — Hand-traced handshake (5 points, in `design.md`)
+
+Take the JM1 handshake in specification Appendix A.1 and annotate it by hand,
+in `design.md`, byte by byte:
+
+- the HELLO: mark each field (type, `sid`, suite count and suites, `X_I`, the
+  empty `ek_I` vector) with its offset and length;
+- the REPLY: the same for `REPLY_core`, then `sig_R`;
+- `TH_R`: write out, in order, exactly which byte strings are hashed, show
+  where `str8(alice)` and `str8(bob)` appear, and say which copy of the HELLO
+  each side uses and why the initiator's recomputation matches the responder's;
+- one DATA record in each direction: mark the IV and ciphertext, say which key
+  encrypts and which key MACs it, and write out the exact bytes under the MAC.
+
+Half a page to a page. Hex and arrows are fine; it does not need to be
+pretty. Write it yourself: a coding agent may answer questions and check your
+annotation against the vectors afterwards, but the annotation is yours, like
+the padding, and `ai-usage.md` should say so. It is due with the client
+checkpoint and graded with it. It is also the Review Lab's starting point: the
+first thing the interviewer will put in front of you is your own trace, so
+the time it takes is time you would spend preparing anyway. A trace produced
+by an agent is easy to recognize and hard to defend.
 
 #### Optional: interfaces, bots and agents (extra credit, up to 6 points)
 
@@ -498,7 +522,8 @@ exercises/                  # Parts 2–3; exact contract follows with the kit
 Include any supporting modules needed to import your client. Do not submit
 account passwords, API keys, or private keys from actual course-server use.
 `design.md` briefly maps the review-critical functions and records what you
-tested and what remains incomplete. Include your warmup examples here.
+tested and what remains incomplete. Include your warmup examples here, and
+the hand-traced handshake of Part 1b.
 
 For the client checkpoint, the supplied `package_submission.py` builds an
 archive of your client source and written files, excluding local credentials and
