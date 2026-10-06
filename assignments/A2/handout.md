@@ -477,7 +477,8 @@ understanding of these regions:
 - Your explanation of the security exercises and proposed repairs.
 
 Expect to trace a short example, explain an invariant, and discuss a small
-change to your code. Networking boilerplate and terminal formatting are not
+change to your code. The session opens with your own hand-traced handshake
+from `design.md` (Part 1b) on the screen, and the questions begin from it. Networking boilerplate and terminal formatting are not
 review-critical. The review rubric assesses tracing behavior, explaining why it
 works, and reasoning about a modification; the staff's detailed rubric will be
 published with the kit.
