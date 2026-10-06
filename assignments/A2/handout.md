@@ -272,6 +272,19 @@ then error handling and state transitions. Start with the JM1 compatibility
 option while developing, but the finished client's default must offer both
 suites as specified.
 
+**Write these yourself.** As with the Part 0 padding, three pieces of the client
+must be written by you, not generated: `receive` (the dispatch on message type
+and the state table from specification §6.9 that it enforces), `send_text`
+(session selection and queueing), and at least one handshake handler end to
+end, either the REJECT/fallback handler or the FINISH handler. A coding agent
+may explain the spec, review your draft, and help you debug it, but may not
+author these. The remaining handlers may be agent-written if you choose,
+provided you can explain them. Say in `ai-usage.md` which of these you wrote
+and what help you had. This is an assignment rule; the agent instruction file
+treats it as one. The reason is the same as for the padding: the state machine
+is the largest part of the review lab, and in a trial run a student who
+delegated it finished with a correct client of which they had written no part.
+
 **Part 1 is graded on your checkpoint submission** (Friday, October 23), because
 the exercise kit released after the checkpoint contains a working reference
 client. The public eligibility checks are available from release, so you can see
@@ -498,7 +511,12 @@ with the disclosure required by the syllabus. In `ai-usage.md`, state which
 tools you used, what you delegated, what you checked yourself, and one thing you
 learned or corrected. State whether you completed the initial warmup without
 generated code; disclose any deviation rather than making a false statement.
-Using no AI is fine and should also be stated.
+State which of `receive`, `send_text` and your chosen handshake handler you
+wrote yourself (Part 1). If you used the course agent instructions, also state
+whether you completed the readiness check they describe (the six questions,
+the live change, and the walkthroughs of agent-written code), and which parts
+you skipped; skipping is allowed, misstating it is not. Using no AI is fine and
+should also be stated.
 
 When using an agent on a review-critical region, ask it to show and explain the
 proposed code, then explain the relevant invariant yourself before moving on.
