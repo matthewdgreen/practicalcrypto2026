@@ -1,7 +1,7 @@
 # Assignment 2 — JMessage: build it, negotiate it, break it
 
-*October 5, 2026; Revision 1, October 26, 2026 (see the changelog at the end). **Released:** Monday, October 5. **Client checkpoint
-(graded):** Friday, October 23, 11:59 pm. **Due:** Monday, November 9, 11:59 pm.
+*October 5, 2026; Revision 2, October 26, 2026 (see the changelog at the end). **Released:** Monday, October 5. **Client checkpoint
+(graded):** Friday, October 23, 11:59 pm. **Due:** Sunday, November 8, 11:59 pm.
 **Review Lab 2:** week of November 9. This release contains a starter kit. A
 full reference implementation and exercises follow separately.*
 
@@ -58,7 +58,7 @@ Your tasks, in order:
 | 1 | Build the client: both suites, both roles, interoperating with the course `echo` user and the public checks | **checkpoint Fri Oct 23** (graded on this snapshot) |
 | 2 | In a local sandbox we supply, play the server operator and show that the negotiation can be subverted | kit released Thu Oct 29 |
 | 3 | In the same sandbox, show that the legacy record layer leaks plaintext to an active attacker | kit released Thu Oct 29 |
-| 4 | Written questions: explain what failed, propose repairs, and say what they do and do not fix | **final Mon Nov 9** |
+| 4 | Written questions: explain what failed, propose repairs, and say what they do and do not fix | **final Sun Nov 8** |
 
 Then, the week of November 9, a 15-minute in-person **Review Lab** on your own
 code. Coding agents are allowed everywhere except Part 0, and the kit includes
@@ -454,7 +454,7 @@ test any of this against real services or other students.
 | Fri Oct 9 | Suggested, ungraded progress target: padding and JM1 records |
 | Fri Oct 23, 11:59 pm Eastern | Client checkpoint, including both suites; Part 1 is graded on it |
 | Thu Oct 29, 9:00 am Eastern | Last late checkpoint accepted; reference-client and exercise-kit release |
-| Mon Nov 9, 11:59 pm Eastern | Final submission |
+| Sun Nov 8, 11:59 pm Eastern | Final submission |
 | Week of Nov 9 | Review Lab 2 |
 
 The KEM API abstraction is sufficient to begin JM2 before the ML-KEM lecture;
@@ -463,8 +463,10 @@ dates must be confirmed when the assignment is released. If the starter kit is
 delayed, staff must revise the checkpoint schedule rather than shorten the
 announced working period. The syllabus's late-hours policy applies to both the
 checkpoint and the final submission. A late checkpoint is accepted only until
-the kit is released (Thursday, October 29, 9:00 am); after that it cannot be
-submitted, because the reference client is public.
+the kit is released (no later than Thursday, October 29, 9:00 am); after that it cannot be
+submitted, because the reference client is public. If the kit is released after
+Thursday, October 29 at 9:00 am, the final due date moves later by the same
+amount of time.
 
 ## 6. Review lab and eligibility
 
@@ -593,3 +595,10 @@ privacy threshold.
   release. The final submission moves from Friday, November 6 to Monday,
   November 9 at 11:59 pm, so the working period after the kit is unchanged.
   Nothing else changed.
+- **Revision 2 (October 26, 2026).** The final submission moves to Sunday,
+  November 8 at 11:59 pm. This lines the deadline up with the report deposit
+  (November 8), the tags snapshot (November 9) and Review Lab 2 (week of
+  November 9), none of which change. If the kit is released on Thursday, October 29 as
+  planned, this is one day shorter than the original working period; if it is
+  released earlier, the period is longer. If the kit is released after
+  Thursday, October 29 at 9:00 am, the due date moves later by the same amount.
