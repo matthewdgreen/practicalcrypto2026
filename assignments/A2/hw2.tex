@@ -35,9 +35,9 @@
 
 \emergencystretch=1.5em
 \begin{document}
-\handout{Assignment 2}{October 5, 2026}{Instructor: Matthew Green}{Due: 11:59 pm, November 6}{Assignment 2: JMessage --- build it, negotiate it, break it}
+\handout{Assignment 2}{Revised October 26, 2026}{Instructor: Matthew Green}{Due: 11:59 pm, November 9}{Assignment 2: JMessage --- build it, negotiate it, break it}
 
-\noindent October 5, 2026. \textbf{Released:} Monday, October 5. \textbf{Client checkpoint (graded):} Friday, October 23, 11:59 pm. \textbf{Due:} Friday, November 6, 11:59 pm. \textbf{Review Lab 2:} week of November 9. This release contains a starter kit. A full reference implementation and exercises follow separately.
+\noindent October 5, 2026; Revision 1, October 26, 2026 (see the changelog at the end). \textbf{Released:} Monday, October 5. \textbf{Client checkpoint (graded):} Friday, October 23, 11:59 pm. \textbf{Due:} Monday, November 9, 11:59 pm. \textbf{Review Lab 2:} week of November 9. This release contains a starter kit. A full reference implementation and exercises follow separately.
 
 \medskip\noindent\emph{A Markdown copy of this handout (\file{handout.md}), the protocol specification, the starter kit and the agent instruction files are in the assignment repository:} \url{https://github.com/matthewdgreen/practicalcrypto2026/tree/main/assignments/A2}
 
@@ -67,9 +67,9 @@ Your tasks, in order:
 \midrule
 0 & Write the PKCS\#7 padding functions yourself, by hand, before you use any coding agent on this assignment & first \\
 1 & Build the client: both suites, both roles, interoperating with the course \texttt{echo} user and the public checks & \textbf{checkpoint Fri Oct 23} (graded on this snapshot) \\
-2 & In a local sandbox we supply, play the server operator and show that the negotiation can be subverted & kit released Mon Oct 26 \\
-3 & In the same sandbox, show that the legacy record layer leaks plaintext to an active attacker & kit released Mon Oct 26 \\
-4 & Written questions: explain what failed, propose repairs, and say what they do and do not fix & \textbf{final Fri Nov 6} \\
+2 & In a local sandbox we supply, play the server operator and show that the negotiation can be subverted & kit released Thu Oct 29 \\
+3 & In the same sandbox, show that the legacy record layer leaks plaintext to an active attacker & kit released Thu Oct 29 \\
+4 & Written questions: explain what failed, propose repairs, and say what they do and do not fix & \textbf{final Mon Nov 9} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -283,14 +283,14 @@ Wed Oct 7 & Midterm exam (covers material through Sep 30; A2 is not on it) \\
 Mon Oct 12 & ML-KEM lecture; finish the hybrid (JM2) portion after this lecture if needed \\
 Fri Oct 9 & Suggested, ungraded progress target: padding and JM1 records \\
 Fri Oct 23, 11:59 pm Eastern & Client checkpoint, including both suites; Part 1 is graded on it \\
-Mon Oct 26, 9:00 am Eastern & Last late checkpoint accepted; reference-client and exercise-kit release \\
-Fri Nov 6, 11:59 pm Eastern & Final submission \\
+Thu Oct 29, 9:00 am Eastern & Last late checkpoint accepted; reference-client and exercise-kit release \\
+Mon Nov 9, 11:59 pm Eastern & Final submission \\
 Week of Nov 9 & Review Lab 2 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The KEM API abstraction is sufficient to begin JM2 before the ML-KEM lecture; implementing lattice arithmetic is never required. Checkpoint and kit-release dates must be confirmed when the assignment is released. If the starter kit is delayed, staff must revise the checkpoint schedule rather than shorten the announced working period. The syllabus's late-hours policy applies to both the checkpoint and the final submission. A late checkpoint is accepted only until the kit is released (Monday, October 26, 9:00 am); after that it cannot be submitted, because the reference client is public.
+The KEM API abstraction is sufficient to begin JM2 before the ML-KEM lecture; implementing lattice arithmetic is never required. Checkpoint and kit-release dates must be confirmed when the assignment is released. If the starter kit is delayed, staff must revise the checkpoint schedule rather than shorten the announced working period. The syllabus's late-hours policy applies to both the checkpoint and the final submission. A late checkpoint is accepted only until the kit is released (Thursday, October 29, 9:00 am); after that it cannot be submitted, because the reference client is public.
 
 \section*{6. Review lab and eligibility}
 
@@ -343,6 +343,11 @@ The starter includes \texttt{tools/anon-{}report.py}; \texttt{AGENTS.md} explain
 
 \textbf{Reporting dates:} register your public key by \textbf{October 23} if you have not already registered one, and deposit your report by \textbf{November 8}. Staff will publish the tags snapshot on \textbf{November 9}. Staff will publish the updated roster and announce the attendance submission and no-agent signup routes before they are needed. If a missing key, snapshot, or submission route prevents completion, contact staff privately for help; do not bypass the reporting tool's privacy threshold.
 
+\section*{Changelog}
+
+\begin{itemize}
+\item \textbf{Revision 1 (October 26, 2026).} The reference client and the Parts 2--3 exercise kit are released on Thursday, October 29 at 9:00 am instead of Monday, October 26. Late client checkpoints remain accepted until that release. The final submission moves from Friday, November 6 to Monday, November 9 at 11:59 pm, so the working period after the kit is unchanged. Nothing else changed.
+\end{itemize}
 \bigskip
 \noindent\rule{\textwidth}{0.4pt}
 
