@@ -9,7 +9,7 @@ Course site (syllabus, schedule, readings): **https://practicalcrypto.org**
 | | Handout | Released | Due |
 |---|---|---|---|
 | [Assignment 1: Classical Cryptanalysis](assignments/A1/) | [hw1.pdf](assignments/A1/hw1.pdf) | Wed Sep 2 | Fri Sep 18 |
-| [Assignment 2: JMessage — build it, negotiate it, break it](assignments/A2/) | [hw2.pdf](assignments/A2/hw2.pdf) · [specification](assignments/A2/specification.md) · [starter kit](assignments/A2/starter-kit.zip) · [exercise kit](assignments/A2/exercise-kit.zip) | Mon Oct 5 | checkpoint Fri Oct 23 · final Fri Nov 20 |
+| [Assignment 2: JMessage — build it, negotiate it, break it](assignments/A2/) | [hw2.pdf](assignments/A2/hw2.pdf) · [specification](assignments/A2/specification.md) · [starter kit](assignments/A2/starter-kit.zip) · [exercise kit](assignments/A2/exercise-kit.zip) · [Parts 2–3 PDF](assignments/A2/exercise-instructions/parts-2-3.pdf) | Mon Oct 5 | checkpoint Fri Oct 23 · final Fri Nov 20 |
 
 Each assignment directory contains the handout (PDF and a Markdown copy your
 coding agent can read) and `AGENTS.md` / `CLAUDE.md` agent instructions, plus
