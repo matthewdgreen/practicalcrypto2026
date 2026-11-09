@@ -1,9 +1,10 @@
 # Assignment 2 — JMessage: build it, negotiate it, break it
 
-*October 5, 2026; Revision 2, October 26, 2026 (see the changelog at the end). **Released:** Monday, October 5. **Client checkpoint
-(graded):** Friday, October 23, 11:59 pm. **Due:** Sunday, November 8, 11:59 pm.
-**Review Lab 2:** week of November 9. This release contains a starter kit. A
-full reference implementation and exercises follow separately.*
+*October 5, 2026; Revision 3, November 9, 2026 (see the changelog at the end). **Released:** Monday, October 5. **Client checkpoint
+(graded):** Friday, October 23, 11:59 pm. **Due:** Friday, November 20, 11:59 pm.
+**Review Lab 2:** week of November 30. The starter kit shipped with the original
+release; the reference implementation and the Parts 2–3 exercise kit
+([exercise-kit.zip](exercise-kit.zip)) were released on Monday, November 9.*
 
 Read this handout together with the [protocol specification](specification.md).
 The spec defines how the application will work and how it interoperates. This
@@ -56,11 +57,11 @@ Your tasks, in order:
 |---|---|---|
 | 0 | Write the PKCS#7 padding functions yourself, by hand, before you use any coding agent on this assignment | first |
 | 1 | Build the client: both suites, both roles, interoperating with the course `echo` user and the public checks | **checkpoint Fri Oct 23** (graded on this snapshot) |
-| 2 | In a local sandbox we supply, play the server operator and show that the negotiation can be subverted | kit released Thu Oct 29 |
-| 3 | In the same sandbox, show that the legacy record layer leaks plaintext to an active attacker | kit released Thu Oct 29 |
-| 4 | Written questions: explain what failed, propose repairs, and say what they do and do not fix | **final Sun Nov 8** |
+| 2 | In a local sandbox we supply, play the server operator and show that the negotiation can be subverted | kit released Mon Nov 9 |
+| 3 | In the same sandbox, show that the legacy record layer leaks plaintext to an active attacker | kit released Mon Nov 9 |
+| 4 | Written questions: explain what failed, propose repairs, and say what they do and do not fix | **final Fri Nov 20** |
 
-Then, the week of November 9, a 15-minute in-person **Review Lab** on your own
+Then, the week of November 30, a 15-minute in-person **Review Lab** on your own
 code. Coding agents are allowed everywhere except Part 0, and the kit includes
 instructions that make them teach rather than just produce; the lab and the
 quizzes measure what you understood, not what your agent wrote.
@@ -385,15 +386,29 @@ build; one thing done well beats three done hastily.
 ### Parts 2 and 3 — Controlled security exercises
 
 These parts examine negotiation downgrade and record-layer error handling in the
-supplied local teaching environment. The exercise kit and its submission
-interface will be released after the client checkpoint. They will specify the
-required result, evidence to submit, execution limits, and partial-credit
-criteria. The kit is released separately.
+supplied local teaching environment. The exercise kit
+([exercise-kit.zip](exercise-kit.zip)), released after the client checkpoint,
+contains that environment and its submission interface. Its
+`EXERCISES.md` specifies the required result, evidence to submit, execution
+limits, and partial-credit criteria.
 
 Submit the exercise work and a concise explanation of the security property that
 failed, the assumptions required, and the evidence supporting your conclusion.
 The written explanation is assessed separately from successful execution. Use
 the course-provided local environment for these exercises.
+
+**Write this yourself.** As with the Part 0 padding and the Part 1 regions, one
+piece of the Part 3 attack must be written by you, not generated: the function
+`recover_byte` in `exercises/attack.py`, which turns one successful
+padding-oracle probe into one plaintext byte, together with a two- or
+three-line comment above it that derives it from CBC decryption. Your `recover`
+must obtain every recovered byte through this function. A coding agent may
+explain CBC decryption and padding, review your draft, and help you debug it,
+but may not write or correct `recover_byte`. The rest of the attack may be
+agent-written if you choose, provided you can explain it. Say in `ai-usage.md`
+whether you wrote it and what help you had. The reason is the same as for
+Part 1: this short step is the core of the attack, and the Review Lab asks you
+to derive it.
 
 ### Part 4 — Explain and repair
 
@@ -453,9 +468,11 @@ test any of this against real services or other students.
 | Mon Oct 12 | ML-KEM lecture; finish the hybrid (JM2) portion after this lecture if needed |
 | Fri Oct 9 | Suggested, ungraded progress target: padding and JM1 records |
 | Fri Oct 23, 11:59 pm Eastern | Client checkpoint, including both suites; Part 1 is graded on it |
-| Thu Oct 29, 9:00 am Eastern | Last late checkpoint accepted; reference-client and exercise-kit release |
-| Sun Nov 8, 11:59 pm Eastern | Final submission |
-| Week of Nov 9 | Review Lab 2 |
+| Thu Oct 29, 9:00 am Eastern | Last late checkpoint accepted |
+| Mon Nov 9, 9:00 am Eastern | Reference-client and exercise-kit release (Revision 3) |
+| Fri Nov 20, 11:59 pm Eastern | Final submission; anonymous-report deposit |
+| Sat Nov 21 | Tags snapshot |
+| Week of Nov 30 | Review Lab 2 |
 
 The KEM API abstraction is sufficient to begin JM2 before the ML-KEM lecture;
 implementing lattice arithmetic is never required. Checkpoint and kit-release
@@ -519,7 +536,7 @@ design.md
 written.md
 ai-usage.md
 checkpoint/                 # client checkpoint source snapshot
-exercises/                  # Parts 2–3; exact contract follows with the kit
+exercises/                  # Parts 2–3; contract in the kit's EXERCISES.md
 ```
 
 Include any supporting modules needed to import your client. Do not submit
@@ -540,7 +557,8 @@ tools you used, what you delegated, what you checked yourself, and one thing you
 learned or corrected. State whether you completed the initial warmup without
 generated code; disclose any deviation rather than making a false statement.
 State which of `receive`, `send_text` and your chosen handshake handler you
-wrote yourself (Part 1). If you used the course agent instructions, also state
+wrote yourself (Part 1), and whether you wrote `recover_byte` yourself (Part 3).
+If you used the course agent instructions, also state
 whether you completed the readiness check they describe (the six questions,
 the live change, and the walkthroughs of agent-written code), and which parts
 you skipped; skipping is allowed, misstating it is not. Using no AI is fine and
@@ -580,8 +598,8 @@ instructions. The proof establishes participation without identifying which
 anonymous report is yours. Do not include it in the programming archive.
 
 **Reporting dates:** register your public key by **October 23** if you have not
-already registered one, and deposit your report by **November 8**. Staff will
-publish the tags snapshot on **November 9**. Staff will publish the updated
+already registered one, and deposit your report by **November 20**. Staff will
+publish the tags snapshot on **November 21**. Staff will publish the updated
 roster and announce the attendance submission and no-agent signup routes before
 they are needed. If a missing key, snapshot, or submission route prevents
 completion, contact staff privately for help; do not bypass the reporting tool's
@@ -602,3 +620,17 @@ privacy threshold.
   planned, this is one day shorter than the original working period; if it is
   released earlier, the period is longer. If the kit is released after
   Thursday, October 29 at 9:00 am, the due date moves later by the same amount.
+- **Revision 3 (November 9, 2026).** Published with the exercise kit, which is
+  released on Monday, November 9 at 9:00 am, eleven days after the Thursday,
+  October 29 target. The final submission moves to Friday, November 20 at
+  11:59 pm. That is one day more than Revision 2's rule requires; it restores
+  the working period after the kit that the original October 5 schedule gave
+  (Revision 2 had shortened it by a day). The anonymous-report deposit moves
+  with it to November 20 and the tags snapshot to November 21; Review Lab 2
+  moves to the week of November 30 (the week of November 23 is Thanksgiving
+  break). Part 3 gains one student-written piece: `recover_byte`
+  in `exercises/attack.py` and the comment deriving it (Parts 2 and 3, "Write
+  this yourself"). The AI-usage note (§7) must say whether you wrote it. The
+  Parts 2–3 text now points to the kit's `EXERCISES.md`, which also states the
+  execution/explanation split for Parts 2 and 3. The starter's `AGENTS.md` and
+  `README.md` dates are updated to match. Points are unchanged.

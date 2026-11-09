@@ -59,7 +59,7 @@ side effect.
    `written.md`, `ai-usage.md`, the `checkpoint/` snapshot, and later
    `exercises/`), the hand-traced handshake that goes in `design.md` (Part 1b,
    theirs to write), the two dates (client checkpoint **Fri Oct 23**, final
-   **Fri Nov 6**), and the fact that Part 1 is graded on the checkpoint.
+   **Fri Nov 20**), and the fact that Part 1 is graded on the checkpoint.
    Students in Assignment 1 lost time to not knowing what remained.
 3. **Say the two things that are not optional:** there is a required
    ten-minute readiness check before you help package anything (below), and
@@ -698,8 +698,8 @@ for a roster that includes it. Keep the key for the rest of the semester. A
 lost registered key requires staff help; do not silently substitute a new one.
 
 The A2 reporting dates are public-key registration by **October 23**,
-report deposit by **November 8**, and publication of the tags snapshot on
-**November 9** (handout §7). Review labs run the week of November 9. A roster
+report deposit by **November 20**, and publication of the tags snapshot on
+**November 21** (handout §7). Review labs run the week of November 30. A roster
 update and opening the A2 drop box are staff tasks, not actions for a student
 agent to perform.
 

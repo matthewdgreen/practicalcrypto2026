@@ -79,8 +79,8 @@ separate: review it before approving transmission. Keep contribution logs in
 `.agent-notes/` and reports, receipts, and attendance proofs out of the submission.
 
 Reporting dates (handout §7): register a public key by **October 23** if you
-have not already registered one, and deposit your report by **November 8**.
-Staff will publish the tags snapshot on **November 9**.
+have not already registered one, and deposit your report by **November 20**.
+Staff will publish the tags snapshot on **November 21**.
 
 Finish your initial padding functions and examples independently. Then copy
 that version to `padding_first_attempt.py` before using AI feedback or changing
